@@ -13,5 +13,19 @@
         <textarea name="description" placeholder="Enter your message" ></textarea>
         <input type="submit" value="Submit"> 
     </form>
+    <ul>
+        <% if (Array.isArray(files) && files.length > 0) { %>
+            <% files.forEach(file => { %>
+                <li>
+                    <a href="/files/<%= encodeURIComponent(file) %>" target="_blank"><%= file %></a>
+                    <a href="/edit/<%= encodeURIComponent(file) %>" target="_blank">Edit</a>
+                </li>
+            <% }); %>
+        <% } else { %>
+            <li>No files found.</li>
+        <% } %>
+    </ul>
+
+
 </body>
 </html>

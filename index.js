@@ -9,22 +9,57 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, "public")));
 
 
-// app.get('/', (req, res) => {
-//     res.send('hiuuuyyuuu')
-// })
+app.get("/", (req, res) => { 
 
-app.get("/", (req, res) => {
-    res.render("index");
+    fs.readdir("files", (err, files) => {
+        if(err){
+            console.log(err);
+        } else {
+            console.log(files); 
+            res.render("index", {files: files});
+        }
+    })
 });
 
-app.get("/profile/beta", (req, res) => {
-    res.send("beta");
+
+app.get("/files/:filename", (req, res) => {
+    const filename = req.params.filename;
+    fs.readFile(`files/${filename}`, (err, data) => {
+        if(err){
+            console.log(err);
+        } else {
+            res.render("file", {data: data, filename: filename});
+        }
+    })
 });
+
+app.get("/edit/:filename", (req, res) => {
+    const filename = req.params.filename;
+    fs.readFile(`files/${filename}`, (err, data) => {
+        if(err){
+            console.log(err);
+        } else {
+            res.render("edit", {data: data, filename: filename});
+        }
+    })
+});
+
+app.post("/update", (req, res) => {
+    const {title, updatedTitle} = req.body;
+    fs.rename(`files/${title}`, `files/${updatedTitle}`, (err) => {
+        if(err){
+            console.log(err);
+        } else {
+            console.log("File updated successfully");
+            res.redirect("/");
+        }
+    })
+})
 
 app.post("/submit", (req, res) => {
     const {title, description} = req.body;
 
-    fs.writeFile(`files/${title}.txt`, description, (err, data) => {
+    fs.writeFile(`files/${title}.txt`, description, (err) => {
         if(err){
             console.log(err);
         } else {
@@ -35,9 +70,6 @@ app.post("/submit", (req, res) => {
 })
 
 
-app.listen(3000, (err) => {
-    if (err) {
-        console.log(err);
-    } else {
+app.listen(3000, () => {
     console.log("Server is running on port 3000");
-}});
+});
