@@ -46,7 +46,7 @@ app.get("/edit/:filename", (req, res) => {
 
 app.post("/update", (req, res) => {
     const {title, updatedTitle} = req.body;
-    fs.rename(`files/${title}`, `files/${updatedTitle}`, (err) => {
+    fs.rename(`files/${title}`, `files/${updatedTitle}.txt`, (err) => {
         if(err){
             console.log(err);
         } else {
@@ -73,3 +73,5 @@ app.post("/submit", (req, res) => {
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
+
+// mongodb+srv://<db_username>:<db_password>@cluster0.zqvindj.mongodb.net/?appName=Cluster0
